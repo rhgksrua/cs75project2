@@ -1,0 +1,26 @@
+html, body {
+    height: 100%;
+    width: 100%;
+
+
+}
+
+.highlight {
+    background: yellow;
+
+}
+
+.map-container {
+    height: 500px;
+    width: 500px;
+
+
+}
+
+
+#map-canvas {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
