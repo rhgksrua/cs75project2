@@ -1,23 +1,17 @@
 html, body {
     height: 100%;
     width: 100%;
-
-
 }
 
 .highlight {
     background: yellow;
-
 }
 
 .map-container {
     float: left;
     height: 500px;
     width: 500px;
-
-
 }
-
 
 #map-canvas {
     height: 100%;
@@ -27,4 +21,9 @@ html, body {
 }
 
 #routes-list {
+}
+
+.gm-style-iw {
+    width: 150px;
+    min-height: 50px;
 }
