@@ -2,6 +2,7 @@
 <html>
     <head>
         <title><?php echo isset($title) ? $title : ''; ?></title>
+        <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 
 <?php
 // add css

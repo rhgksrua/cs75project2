@@ -1,16 +1,28 @@
 html, body {
     height: 100%;
     width: 100%;
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .highlight {
-    background: yellow;
+    background-color: #039be5;
+    color: white;
+}
+
+.content-container {
+    width: 100%;
+    height: 75%%;
 }
 
 .map-container {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
     float: left;
-    height: 500px;
-    width: 500px;
+    height: 100%;
+    width: 50%;
+    margin: 20px;
 }
 
 #map-canvas {
@@ -20,10 +32,49 @@ html, body {
     padding: 0;
 }
 
+.routes-container {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: left;
+    width: 40%;
+    height: 100%;
+    margin: 20px;
+}
+
+.nav-bar {
+    height: 40px;
+    line-height: 40px;
+    background: #40c4ff;
+    padding: 10px;
+    color: white;
+    padding-left: 50px;
+    box-shadow: 0 2px 5px rgba(0,0,0,.26);
+}
+
+.title {
+    font-size: 24px;
+
+}
+
 #routes-list {
+    float: left;
 }
 
 .gm-style-iw {
     width: 150px;
     min-height: 50px;
+}
+
+.routes {
+    margin: 10px;
+    padding: 15px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,.26);
+
+}
+
+.routes:hover {
+    color: white;
+    background-color: #009688;
 }
