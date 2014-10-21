@@ -1,0 +1,116 @@
+html, body {
+    background: #efefef;
+    height: 100%;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+
+}
+
+.highlight {
+    background-color: #039be5;
+    color: white;
+    margin: 10px;
+    padding: 15px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,.26);
+}
+
+.content-container {
+    width: 100%;
+    height: 75%;
+}
+
+.map-container {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: left;
+    height: 100%;
+    width: 100%;
+    margin: 2px;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,.26);
+}
+
+#map-canvas {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.routes-container {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: left;
+    margin: 2px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,.26);
+    width: 100%;
+}
+
+.nav-bar {
+    height: 40px;
+    line-height: 40px;
+    background: #40c4ff;
+    padding: 10px;
+    color: white;
+    padding-left: 50px;
+    box-shadow: 0 2px 5px rgba(0,0,0,.26);
+}
+
+.title {
+    font-size: 24px;
+
+}
+
+#routes-list {
+    float: left;
+    width: 100%;
+}
+.gm-style-iw {
+    width: 150px;
+}
+
+.station {
+    font-weight: bold;
+    font-size: 14px;
+    background: #ff5722;
+    color: white;
+    padding: 3px;
+    white-space: pre-wrap;
+}
+
+.scrollFix {
+    line-height: 1.34;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.dest {
+    font-style: italic;
+}
+
+.minutes {
+    text-indent: 10px;
+
+}
+
+.routes {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 10px;
+    padding: 15px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,.26);
+    background-color: white;
+    width: 100%;
+}
+
+.routes:hover {
+    color: white;
+    background-color: #009688;
+}

@@ -2,7 +2,7 @@
 require_once('../includes/helper.php');
 include('../../googleapikey.php');
 
-$css = array('reset', 'home');
+$css = array('reset');
 $js = array('main');
 $custom = array('<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=' . $map_api_key . '"></script>');
 $resources = array(
