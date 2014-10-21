@@ -6,8 +6,8 @@ var infoWindows = [];
 
 // Initial render of Google Maps
 function initialize() {
-
-    var mapOptions = {
+    var mapOptions;
+    mapOptions = {
         center: { lat: 37.7833, lng: -122.4167 },
         zoom: 10
     };
@@ -16,8 +16,9 @@ function initialize() {
 
 // Helper function for toggling current route
 function getChildren(n, skipMe) {
-    var r = [];
-    var elem = null;
+    var r, elem = null;
+    r = [];
+    elem = null;
     for ( ; n; n = n.nextSibling ) {
         if (n.nodeType == 1 && n != skipMe)
             r.push(n);
@@ -49,13 +50,21 @@ function showMap(route, map) {
                     lat = xmlDoc.getElementsByTagName("latitude")[i].textContent;
                     name = xmlDoc.getElementsByTagName("name")[i].textContent;
                     abbr = xmlDoc.getElementsByTagName("abbr")[i].textContent;
-
                     latlngs.push([lat, lng, name, abbr]);
                 }
-                // color of the route
+
+                // center Map on route
+                centerMap(latlngs);
+                
                 color = xmlDoc.getElementsByTagName("color")[0].textContent;
+
+                // add marker for each route
                 addMarker(map, latlngs);
+
+                // add route to map with color
                 addPolyline(map, latlngs, color);
+
+                // add info window to stations
                 addInfoWindow(map, latlngs);
                 
             } else {
@@ -67,12 +76,42 @@ function showMap(route, map) {
     return markers;
 }
 
+function centerMap(latlng) {
+    var maxLat, minLat, maxLng, minLng, center;
+
+    // Get min max lat lng of route
+    maxLat = Math.max.apply(Math, latlng.map(function(i) {
+        return i[0];
+    }));
+    minLat = Math.min.apply(Math, latlng.map(function(i) {
+        return i[0];
+    }));
+    maxLng = Math.max.apply(Math, latlng.map(function(i) {
+        return i[1];
+    }));
+    minLng = Math.min.apply(Math, latlng.map(function(i) {
+        return i[1];
+    }));
+    
+    latCenter = (maxLat + minLat) / 2.0;
+    lngCenter = (maxLng + minLng) / 2.0;
+
+    // center map on route
+    center = new google.maps.LatLng(latCenter, lngCenter);
+    map.panTo(center);
+    // reset zoom when route is clicked
+    map.setZoom(10);
+
+}
+
+
 function addMarker(map, latlng) {
-    for (var i = 0; i < latlng.length; i++) {
+    var i;
+    for (i = 0; i < latlng.length; i++) {
         marker = new google.maps.Marker(
                 {
                     position: new google.maps.LatLng(latlng[i][0], latlng[i][1]),
-                    title: latlng[i][2],
+                    title: latlng[i][2]
                 });
         marker.setMap(map);
         // Store markers for infoWindows
@@ -117,26 +156,31 @@ function addInfoWindow(map, latlng) {
                 xhr.onload = function (e) {
                     if (xhr.readyState === 4) {
                         if (xhr.status === 200) {
-                            contentHTML = "<div>" + latlng[i][2] + "</div>";
+                            contentHTML = "<div class='station'>" + latlng[i][2] + "</div>";
 
                             // Results from ajax
                             xmlDoc = xhr.responseXML;
-                            console.log(xmlDoc);
                             count = xmlDoc.getElementsByTagName("etd").length;
                             dest = xmlDoc.getElementsByTagName("destination");
 
                             for (j = 0; j < count; j++) {
-                                contentHTML += "<div>To: " + dest[j].textContent + "</div>";
+                                contentHTML += "<div class='dest'>To: " + dest[j].textContent + "</div>";
                                 estimate = dest[j].parentNode.getElementsByTagName("estimate");
-                                contentHTML += "<ul>";
+                                // wrap contentHTML in scrollFix
+                                contentHTML = "<div class='scrollFix info-container'>" + contentHTML + "<ul class='minutes'>";
                                 for (k = 0; k < estimate.length; k++) {
-                                    contentHTML += "<li>" + estimate[k].textContent + " minutes</li>";
+                                    if (estimate[k].textContent === "Leaving") {
+                                        contentHTML += "<li>NOW</li>";
+                                    } else {
+                                        contentHTML += "<li>" + estimate[k].textContent + " minutes</li>";
+                                    }
                                 }
                                 contentHTML += "</ul>";
                             }
+                            contentHTML +="</div>";
                             
                             infoWindow = new google.maps.InfoWindow({
-                                content: contentHTML,
+                                content: contentHTML
                             });
                             infoWindows[i] = infoWindow;
                             infoWindow.open(map, markers[i]);
@@ -166,7 +210,6 @@ function clearMarker() {
         markers[i].setMap(null);
     }
     markers = [];
-
 }
 
 window.onload = function() {
@@ -194,13 +237,14 @@ window.onload = function() {
 
         // Toggle highlights and show markers
         if (event.target.className == "routes") {
-            event.target.className = event.target.className + " highlight";
+            //event.target.className = event.target.className + " highlight";
+            event.target.className = " highlight";
             // Remove all infoWindows from previous click
             infoWindows = [];
             current = null;
             // Render route
             showMap(event.target.id, map);
-        } else if (event.target.className == "routes highlight") {
+        } else if (event.target.className !== "routes") {
             event.target.className = "routes";
         }
 
