@@ -1,9 +1,3 @@
-cs75project1
+cs75project2
 ============
-
-CS75 Finance
-
-Missing:
-
-Client side symbol validation
 
