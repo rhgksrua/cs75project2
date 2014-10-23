@@ -1,6 +1,6 @@
 <?php
 require_once('../includes/helper.php');
-include('../../googleapikey.php');
+include('../googleapikey.php');
 
 $css = array('reset');
 $js = array('main');

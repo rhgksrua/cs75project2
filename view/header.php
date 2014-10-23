@@ -24,7 +24,7 @@ if (isset($js)) {
 }
 ?>
 
-        <link rel="stylesheet" media="(max-width: 640px)" href="css/small.css">
-        <link rel="stylesheet" media="(min-width: 640px)" href="css/large.css">
+        <link rel="stylesheet" media="(max-width: 770px)" href="css/small.css">
+        <link rel="stylesheet" media="(min-width: 770px)" href="css/large.css">
     </head>
     <body>
