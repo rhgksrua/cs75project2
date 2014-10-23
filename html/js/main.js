@@ -143,64 +143,70 @@ function addPolyline(latlng, color) {
 }
 
 function addInfoWindow(map, latlng) {
-    var infoWindow, i, xhr, contentHTML, count, j, k, dest, estimate;
+    var i;
     for (i = 0; i < latlng.length; i++) {
-        (function(i) {
             
-            // Listen for click on marker
-            google.maps.event.addListener(markers[i], 'click', function(event) {
-                // Check if infoWindow is open. Close if open
-                if (current !== null) {
-                    infoWindows[current].close();
-                }
-                // set this infoWindow to current
-                current = i;
-                xhr = new XMLHttpRequest();
-
-                xhr.open("GET", "/?page=eta&station=" + latlng[i][3], true);
-                xhr.onload = function (e) {
-                    if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                            contentHTML = "<div class='station'>" + latlng[i][2] + "</div>";
-
-                            // Results from ajax
-                            xmlDoc = xhr.responseXML;
-                            count = xmlDoc.getElementsByTagName("etd").length;
-                            dest = xmlDoc.getElementsByTagName("destination");
-
-                            for (j = 0; j < count; j++) {
-                                contentHTML += "<div class='dest'>To: " + dest[j].textContent + "</div>";
-                                estimate = dest[j].parentNode.getElementsByTagName("estimate");
-                                // wrap contentHTML in scrollFix
-                                contentHTML = "<div class='scrollFix info-container'>" + contentHTML + "<ul class='minutes'>";
-                                for (k = 0; k < estimate.length; k++) {
-                                    if (estimate[k].textContent === "Leaving") {
-                                        contentHTML += "<li>NOW</li>";
-                                    } else {
-                                        contentHTML += "<li>" + estimate[k].textContent + " minutes</li>";
-                                    }
-                                }
-                                contentHTML += "</ul>";
-                            }
-                            contentHTML +="</div>";
-                            
-                            infoWindow = new google.maps.InfoWindow({
-                                content: contentHTML
-                            });
-                            infoWindows[i] = infoWindow;
-                            infoWindow.open(map, markers[i]);
-
-                        } else {
-                            console.error(xhr.statusText);
-                        }
-                    }
-                };
-                xhr.send(null);
-            });
-        }(i));
+        // Listen for click on marker
+        google.maps.event.addListener(markers[i], 'click', infoWindowEventDelegate(i, latlng), false);
     }
 }
-    
+
+function infoWindowEventDelegate(i, latlng) {
+    return function(){
+        infoWindowEvent(i, latlng);
+    };
+}
+
+function infoWindowEvent(i, latlng) {
+    var infoWindow, xhr, contentHTML, count, j, k, dest, estimate;
+    // Check if infoWindow is open. Close if open
+    if (current !== null) {
+        infoWindows[current].close();
+    }
+    // set this infoWindow to current
+    current = i;
+    xhr = new XMLHttpRequest();
+
+    xhr.open("GET", "/?page=eta&station=" + latlng[i][3], true);
+    xhr.onload = function (e) {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                contentHTML = "<div class='station'>" + latlng[i][2] + "</div>";
+
+                // Results from ajax
+                xmlDoc = xhr.responseXML;
+                count = xmlDoc.getElementsByTagName("etd").length;
+                dest = xmlDoc.getElementsByTagName("destination");
+
+                for (j = 0; j < count; j++) {
+                    contentHTML += "<div class='dest'>To: " + dest[j].textContent + "</div>";
+                    estimate = dest[j].parentNode.getElementsByTagName("estimate");
+                    // wrap contentHTML in scrollFix
+                    contentHTML = "<div class='scrollFix info-container'>" + contentHTML + "<ul class='minutes'>";
+                    for (k = 0; k < estimate.length; k++) {
+                        if (estimate[k].textContent === "Leaving") {
+                            contentHTML += "<li>NOW</li>";
+                        } else {
+                            contentHTML += "<li>" + estimate[k].textContent + " minutes</li>";
+                        }
+                    }
+                    contentHTML += "</ul>";
+                }
+                contentHTML +="</div>";
+                
+                infoWindow = new google.maps.InfoWindow({
+                    content: contentHTML
+                });
+                infoWindows[i] = infoWindow;
+                infoWindow.open(map, markers[i]);
+            } else {
+                console.error(xhr.statusText);
+            }
+        }
+    };
+    xhr.send(null);
+}
+
 // Remove markers
 function clearMarker() {
     var i;
