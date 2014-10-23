@@ -1,10 +1,16 @@
+// Contains all markers for a specific route.
 var markers = [];
+// Cursor for current infoWindow.
 var current = null;
-var map = "";
+// Global google map object.
+var map;
+// Contains polylines for route.
 var path;
+// Contains infoWindows for route.
+// Used to close infoWindow.
 var infoWindows = [];
 
-// Initial render of Google Maps
+// Initialize Google Maps
 function initialize() {
     var mapOptions;
     mapOptions = {
@@ -31,15 +37,15 @@ function getSiblings(n) {
     return getChildren(n.parentNode.firstChild, n);
 }
 
-
-function showMap(route, map) {
+// Add route to map
+function showMap(route) {
 
     var latlngs = [];
     var lng, lat, name, abbr, color, count, i;
     var xhr = new XMLHttpRequest();
 
     xhr.open("GET", "/?page=routes&route=" + route, true);
-    xhr.onload = function (e) {
+    xhr.onload = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 xmlDoc = xhr.responseXML;
@@ -50,6 +56,7 @@ function showMap(route, map) {
                     lat = xmlDoc.getElementsByTagName("latitude")[i].textContent;
                     name = xmlDoc.getElementsByTagName("name")[i].textContent;
                     abbr = xmlDoc.getElementsByTagName("abbr")[i].textContent;
+                    // coord and name for each station
                     latlngs.push([lat, lng, name, abbr]);
                 }
 
@@ -73,7 +80,6 @@ function showMap(route, map) {
         }
     };
     xhr.send(null);
-    return markers;
 }
 
 function centerMap(latlng) {
@@ -139,14 +145,10 @@ function addPolyline(latlng, color) {
 function addInfoWindow(map, latlng) {
     var infoWindow, i, xhr, contentHTML, count, j, k, dest, estimate;
     for (i = 0; i < latlng.length; i++) {
-        // Need to store different i value for addListener
-        // function scope
-        // Adding infoWindow with the marker might be better.
         (function(i) {
-            marker = markers[i];
             
             // Listen for click on marker
-            google.maps.event.addListener(marker, 'click', function(event) {
+            google.maps.event.addListener(markers[i], 'click', function(event) {
                 // Check if infoWindow is open. Close if open
                 if (current !== null) {
                     infoWindows[current].close();
@@ -155,7 +157,6 @@ function addInfoWindow(map, latlng) {
                 current = i;
                 xhr = new XMLHttpRequest();
 
-                console.log(latlng[i][3]);
                 xhr.open("GET", "/?page=eta&station=" + latlng[i][3], true);
                 xhr.onload = function (e) {
                     if (xhr.readyState === 4) {
@@ -227,7 +228,7 @@ window.onload = function() {
 
         // Parent node is ignored
         if (event.target.id == "routes-list") {
-            return
+            return;
         }
 
         // Clear highlights on route name
@@ -245,10 +246,12 @@ window.onload = function() {
             event.target.className = " highlight";
             // Remove all infoWindows from previous click
             infoWindows = [];
+            // remove current infoWindow.
             current = null;
-            // Render route
-            showMap(event.target.id, map);
+            // Render route.
+            showMap(event.target.id);
         } else if (event.target.className !== "routes") {
+            // Turn off highlighted route.
             event.target.className = "routes";
         }
 
